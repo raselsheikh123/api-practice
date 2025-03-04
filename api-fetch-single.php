@@ -1,21 +1,15 @@
-
-
 <?php
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
-header("Access-Control-Allow-Methods: GET");
+header("Access-Control-Allow-Methods: POST");
 
 include "config.php";
 /*{
     "sid": "2",
 }*/
-$data = file_get_contents("php://input");
+$data = json_decode(file_get_contents("php://input"), true);
 
-echo "<pre>";
-print_r($data);
-echo "</pre>";
-//die("get data die");
-$sql = "SELECT * FROM student_info";
+$sql = "SELECT * FROM student_info WHERE id = {$data['sid']}";
 $query = mysqli_query($con, $sql) or die("mysql query error");
 
 if(mysqli_num_rows($query) > 0) {

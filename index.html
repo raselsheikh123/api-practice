@@ -41,38 +41,7 @@
             <th width="70px">Delete</th>
           </tr>
           <tbody id="load-table">
-            <tr>
-              <td class="center">1</td>
-              <td>Name 1</td>
-              <td>25</td>
-              <td>Delhi</td>
-              <td class="center"><button class="edit-btn" data-eid="">Edit</button></td>
-              <td class="center"><button class="delete-btn" data-id="">Delete</button></td>
-            </tr>
-            <tr>
-              <td class="center">2</td>
-              <td>Name 2</td>
-              <td>23</td>
-              <td>Agra</td>
-              <td class="center"><button class="edit-btn" data-eid="">Edit</button></td>
-              <td class="center"><button class="delete-btn" data-id="">Delete</button></td>
-            </tr>
-            <tr>
-              <td class="center">3</td>
-              <td>Name 3</td>
-              <td>27</td>
-              <td>Goa</td>
-              <td class="center"><button class="edit-btn" data-eid="">Edit</button></td>
-              <td class="center"><button class="delete-btn" data-id="">Delete</button></td>
-            </tr>
-            <tr>
-              <td class="center">4</td>
-              <td>Name 4</td>
-              <td>25</td>
-              <td>Delhi</td>
-              <td class="center"><button class="edit-btn" data-eid="">Edit</button></td>
-              <td class="center"><button class="delete-btn" data-id="">Delete</button></td>
-            </tr>
+           <!--Dynamic Data Will Be Loaded-->
           </tbody>
         </table>
       </td>
@@ -114,19 +83,72 @@
 
 <script type="text/javascript" src="js/jquery.js"></script>
 <script type="text/javascript">
-  //Fetch All Records
+  $(document).ready(function() {
+    "use strict";
+    //Fetch All Records
+    function loadData() {
+      $.ajax({
+        url: "http://localhost/php-rest-api/api-fetch-all.php",
+        dataType: "json",
+        success: function(data) {
+          let target = $("#load-table");
+          $.each(data, function(key, value){
+            target.append(`
+                            <tr>
+                              <td class="center">${value.id}</td>
+                              <td>${value.name}</td>
+                              <td>${value.age}</td>
+                              <td>${value.city}</td>
+                              <td class="center"><button class="edit-btn" data-eid="${value.id}">Edit</button></td>
+                              <td class="center"><button class="delete-btn" data-id="${value.id}">Delete</button></td>
+                            </tr>
+                          `)
+          });
 
-  //Insert New Record
+        }
+      });
+    };
+    loadData();
 
-  //Delete Record
+    //Insert New Record
 
-  //Fetch Single Record : Show in Modal Box
+    //Delete Record
 
-  //Hide Modal Box
+    //Fetch Single Record : Show in Modal Box
 
-  //Update Record
+    //Hide Modal Box
 
-  //Live Search Record
+    //Update Record
+    function editForm() {
+      $(document).on('click', '.edit-btn', function() {
+        let id = $(this).data("eid");
+        console.log(id);
+        $.ajax({
+          url: "http://php-rest-api.test/api-fetch-single.php",
+          dataType: "json",
+          data:{
+            sid: id
+          },
+          success: function(data) {
+            console.log(data);
+          }
+        });
+        $("#modal").show();
+      })
+    }
+    editForm();
+
+    function closeModal() {
+      $("#close-btn").on('click', function() {
+        $("#modal").hide();
+      })
+    }
+    closeModal();
+
+    //Live Search Record
+
+  });
+
 </script>
 </body>
 </html>
